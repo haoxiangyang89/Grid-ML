@@ -1,8 +1,9 @@
 # read the matpower data and process it in PowerModels.jl
 using PowerModels, Gurobi, Ipopt, Random, Distributions;
+using JLD,HDF5;
 
 # read in the list of hard cases
-list_file = readdir("./data/hard_case");
+list_file = readdir("./data/hard_case/Solvable");
 result_cat = Dict();
 ErrorList = [];
 NumList = [];
@@ -13,7 +14,9 @@ for itema in list_file
 #    if occursin("pglib",itema)
     try
         if occursin("case",itema)
-            result = run_dc_opf("./data/hard_case/"*itema,Gurobi.Optimizer);
+            # result = run_dc_opf("./data/hard_case/"*itema,Gurobi.Optimizer);
+            result = run_dc_opf("./data/hard_case/Solvable/"*itema,
+                optimizer_with_attributes(Ipopt.Optimizer, "linear_solver" => "ma27"));
             result_cat[itema] = result["termination_status"];
         end
     catch
@@ -40,6 +43,14 @@ for iKey in keys(result_cat)
     end
 end
 
+# Result:
+# 1. using Gurobi, there are cases that could be solved, which are put in "Solvable" folder
+# 2. the rest of the cases are all infeasible or numerical issue
+# 3. solving the rest of the cases using Ipopt yields LOCALLY_INFEASIBLE for all
+
+
+##
+
 # alter the load portfolio to generate hard case
 # read in the data
 const GUROBI_ENV = Gurobi.Env();
@@ -58,7 +69,6 @@ for i in 1:length(load_keys)
 end
 
 # test changing load at all buses with a normal distribution deviation
-result_load_2 = []
 σ_load = Dict()
 load_distrn = Dict()
 for i in 1:length(load_keys)
@@ -66,6 +76,8 @@ for i in 1:length(load_keys)
     load_distrn[load_keys[i]] = Normal(0,σ_load[load_keys[i]])
 end
 
+result_load_2 = []
+errorLoad = Dict()
 for iterNo in 1:1000
     network_data_new = deepcopy(network_data)
     for i in 1:length(load_keys)
@@ -75,4 +87,9 @@ for iterNo in 1:1000
                 optimizer_with_attributes(() -> Gurobi.Optimizer(GUROBI_ENV),
                                             "OutputFlag" => 0))
     push!(result_load_2, result["termination_status"])
+    if result["termination_status"] != OPTIMAL
+        errorLoad[iterNo] = network_data_new["load"]
+    end
 end
+
+save("errorLoad.jld", "errorLoad", errorLoad);
