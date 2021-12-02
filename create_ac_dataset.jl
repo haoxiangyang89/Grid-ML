@@ -4,7 +4,9 @@ using CSV;
 using DataFrames;
 
 list_file = readdir("./data/hard_case/Julia_Solvable");
-result_cat = Dict();
+result_ter_status = Dict();
+result_obj = Dict();
+result_time = Dict();
 ErrorList = [];
 NumList = [];
 OptList = [];
@@ -17,8 +19,11 @@ for itema in list_file
     try
         if occursin("case", itema)
             # result = run_dc_opf("./data/hard_case/"*itema,Gurobi.Optimizer);
-            result = run_ac_opf("./data/hard_case/Julia_Solvable/" * itema, Ipopt.Optimizer)
-            result_cat[itema] = result["termination_status"]
+            # result = run_ac_opf("./data/hard_case/Julia_Solvable/" * itema, Ipopt.Optimizer)
+            result = run_ac_opf("./data/hard_case/Julia_Solvable" * itema, Ipopt.Optimizer)
+            result_ter_status[itema] = result["termination_status"]
+            result_obj[itema] = result["objective"]
+            result_time = result["solve_time"]
         end
     catch
         push!(ErrorList, itema)
@@ -45,5 +50,12 @@ for iKey in keys(result_cat)
     end
 end
 
-df_ter_status = DataFrame(result_cat)
+df_ter_status = DataFrame(result_ter_status)
 CSV.write("ter_status.csv", df_ter_status)
+
+
+df_obj = DataFrame(result_obj)
+CSV.write("obj.csv", df_obj)
+
+df_time = DataFrame(result_time)
+CSV.write("time.csv", df_time)
