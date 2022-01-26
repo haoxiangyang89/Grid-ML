@@ -1,0 +1,39 @@
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+Total number of variables............................:     1157
+                     variables with only lower bounds:        0
+                variables with lower and upper bounds:     1084
+                     variables with only upper bounds:        0
+Total number of equality constraints.................:      822
+Total number of inequality constraints...............:      456
+        inequality constraints with only lower bounds:      108
+   inequality constraints with lower and upper bounds:        0
+        inequality constraints with only upper bounds:      348
+
+
+Number of Iterations....: 31
+
+                                   (scaled)                 (unscaled)
+Objective...............:   1.9314847735396645e+03    2.3153085006247755e+05
+Dual infeasibility......:   1.4657153230161334e-12    1.7569815684625443e-10
+Constraint violation....:   2.7255975254547593e-14    2.7255975254547593e-14
+Variable bound violation:   2.7354729592588001e-08    2.7354729592588001e-08
+Complementarity.........:   3.1768346628902561e-09    3.8081337222191700e-07
+Overall NLP error.......:   3.1768346628902561e-09    3.8081337222191700e-07
+
+
+Number of objective function evaluations             = 32
+Number of objective gradient evaluations             = 32
+Number of equality constraint evaluations            = 32
+Number of inequality constraint evaluations          = 32
+Number of equality constraint Jacobian evaluations   = 32
+Number of inequality constraint Jacobian evaluations = 32
+Number of Lagrangian Hessian evaluations             = 31
+Total seconds in IPOPT                               = 2.332
+
+EXIT: Optimal Solution Found.

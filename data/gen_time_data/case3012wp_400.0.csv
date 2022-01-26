@@ -1,0 +1,32 @@
+Total number of variables............................:    20955
+                     variables with only lower bounds:        0
+                variables with lower and upper bounds:    17919
+                     variables with only upper bounds:        0
+Total number of equality constraints.................:    20313
+Total number of inequality constraints...............:    14264
+        inequality constraints with only lower bounds:     3566
+   inequality constraints with lower and upper bounds:        0
+        inequality constraints with only upper bounds:    10698
+
+
+Number of Iterations....: 67
+
+                                   (scaled)                 (unscaled)
+Objective...............:   1.5884447893112290e+04    2.5917065182402013e+06
+Dual infeasibility......:   3.4614697243744181e-09    5.6477340022893008e-07
+Constraint violation....:   7.5499606566609145e-12    9.5013996670445522e-12
+Variable bound violation:   5.0343746949010892e-08    5.0343746949010892e-08
+Complementarity.........:   1.6946306704107581e-09    2.7649594018421930e-07
+Overall NLP error.......:   3.4614697243744181e-09    5.6477340022893008e-07
+
+
+Number of objective function evaluations             = 69
+Number of objective gradient evaluations             = 68
+Number of equality constraint evaluations            = 69
+Number of inequality constraint evaluations          = 69
+Number of equality constraint Jacobian evaluations   = 68
+Number of inequality constraint Jacobian evaluations = 68
+Number of Lagrangian Hessian evaluations             = 67
+Total seconds in IPOPT                               = 26.929
+
+EXIT: Optimal Solution Found.
