@@ -1,10 +1,12 @@
 # read the matpower data and process it in PowerModels.jl
 using PowerModels, Gurobi, Ipopt, Random, Distributions;
-using JLD, HDF5;
+# using JLD, HDF5;
+using CSV;
+using DataFrames;
 
 # read in the list of hard cases
 # list_file = readdir("./data/hard_case/Solvable");
-list_file = readdir("./data/hard_case/Julia_Solvable");
+list_file = readdir("./data/hard_case/Julia_Solvablez");
 
 result_cat = Dict();
 ErrorList = [];
@@ -94,4 +96,4 @@ for iterNo = 1:1000
     end
 end
 
-save("errorLoad.jld", "errorLoad", errorLoad);
+save("errorLoad.csv", "errorLoad", errorLoad);
