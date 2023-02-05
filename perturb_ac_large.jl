@@ -262,11 +262,148 @@ for qt_key in keys(qt_dict)
 end
 
 for pd_key in keys(pd_dict)
-    result[!, pd_key] = string(pd_dict[pd_key])
+    result[!, pd_key] = pd_dict[pd_key]
 end
 
 for qd_key in keys(qd_dict)
-    result[!, qd_key] = string(qd_dict[qd_key])
+    result[!, qd_key] = qd_dict[qd_key]
 end
 
 CSV.write("./data/perturb/$(m_file[1:end-2])_perturb_$(time_lim)_$(σ)_$(index).csv", result, bufsize = 2^31)
+
+perturbResult_dict_ntl = pmap(ω -> run_ac_noTimeLim(ω, itema, network_data, load_keys, gen_keys, pd_perturb_list[ω], qd_perturb_list[ω]), 1:n)
+
+round = 0
+for profile in perturbResult_dict_ntl
+
+    round = round + 1
+
+    pd_dict_profile = Dict()
+
+    case_name_r = m_file * "_" * string(round)
+    push!(case_name, case_name_r)
+    push!(obj_val, profile[1])
+    push!(Optimal, profile[2])
+    push!(solve_time, profile[3])
+    push!(primal_feasibility, profile[4])
+    push!(dual_feasibility, profile[5])
+    push!(time_limit, profile[6])
+    push!(esti_obj_val, profile[11])
+    push!(dual_infeasibility, profile[12])
+    push!(constraint_violation, profile[13])
+    push!(overall_nlp, profile[14])
+    push!(complementarity, profile[15])
+    push!(var_bound_violation, profile[16])
+    push!(esti_Optimal, profile[17])
+
+    for branch_key in [i for i in keys(profile[10])]
+        qf_key = "qf" * "_" * branch_key
+        push!(qf_dict[qf_key], string(profile[10][branch_key]["qf"]))
+
+        qt_key = "qt" * "_" * branch_key
+        push!(qt_dict[qt_key], string(profile[10][branch_key]["qt"]))
+
+        pf_key = "pf" * "_" * branch_key
+        push!(pf_dict[pf_key], string(profile[10][branch_key]["pf"]))
+
+        pt_key = "pt" * "_" * branch_key
+        push!(pt_dict[pt_key], string(profile[10][branch_key]["pt"]))
+
+    end
+
+    for gen_key in [i for i in keys(profile[9])]
+        qg_key = "qg" * "_" * gen_key
+        push!(qg_dict[qg_key], string(profile[9][gen_key]["qg"]))
+
+        pg_key = "pg" * "_" * gen_key
+        push!(pg_dict[pg_key], string(profile[9][gen_key]["pg"]))
+
+    end
+
+    for bus_key in [i for i in keys(profile[8])]
+
+        va_key = "va" * "_" * bus_key
+        push!(va_dict[va_key], string(profile[8][bus_key]["va"]))
+
+
+        vm_key = "vm" * "_" * bus_key
+        push!(vm_dict[vm_key], string(profile[8][bus_key]["vm"]))
+    end
+
+    pd_dict_profile = Dict()
+    qd_dict_profile = Dict()
+    for load_key in [i for i in keys(profile[7])]
+        pd_key = "pd" * "_" * load_key
+        qd_key = "qd" * "_" * load_key
+        push!(pd_dict[pd_key], string(profile[7][load_key]["pd"]))
+        push!(qd_dict[qd_key], string(profile[7][load_key]["qd"]))
+        pd_dict_profile[load_key] = profile[7][load_key]["pd"]
+        qd_dict_profile[load_key] = profile[7][load_key]["qd"]
+    end
+    push!(pd_perturb_list, pd_dict_profile)
+    push!(qd_perturb_list, qd_dict_profile)
+
+end
+
+result = DataFrame()
+result[!, "case_name"] = case_name
+result[!, "obj_val"] = obj_val
+result[!, "solve_time"] = solve_time
+result[!, "Optimal"] = Optimal
+result[!, "primal_feasibility"] = primal_feasibility
+result[!, "dual_feasibility"] = dual_feasibility
+result[!, "obj_val"] = obj_val
+result[!, "time_limit"] = time_limit
+result[!, "esti_obj_val"] = esti_obj_val
+result[!, "dual_infeasibility"] = dual_infeasibility
+result[!, "constraint_violation"] = constraint_violation
+result[!, "overall_nlp"] = overall_nlp
+result[!, "complementarity"] = complementarity
+result[!, "var_bound_violation"] = var_bound_violation
+result[!, "esti_Optimal"] = esti_obj_val
+
+for va_key in keys(va_dict)
+    result[!, va_key] = va_dict[va_key]
+end
+
+for vm_key in keys(vm_dict)
+    result[!, vm_key] = vm_dict[vm_key]
+end
+
+for pg_key in keys(pg_dict)
+    if length(pg_dict[pg_key]) != 0
+        result[!, pg_key] = pg_dict[pg_key]
+    end
+end
+
+for qg_key in keys(qg_dict)
+    if length(qg_dict[qg_key]) != 0
+        result[!, qg_key] = qg_dict[qg_key]
+    end
+end
+
+for pf_key in keys(pf_dict)
+    result[!, pf_key] = pf_dict[pf_key]
+end
+
+for pt_key in keys(pt_dict)
+    result[!, pt_key] = pt_dict[pt_key]
+end
+
+for qf_key in keys(qf_dict)
+    result[!, qf_key] = qf_dict[qf_key]
+end
+
+for qt_key in keys(qt_dict)
+    result[!, qt_key] = qt_dict[qt_key]
+end
+
+for pd_key in keys(pd_dict)
+    result[!, pd_key] = pd_dict[pd_key]
+end
+
+for qd_key in keys(qd_dict)
+    result[!, qd_key] = qd_dict[qd_key]
+end
+
+CSV.write("./data/perturb/$(m_file[1:end-2])_perturb_$(time_lim)_$(σ)_$(index)_ntl.csv", result, bufsize = 2^31)
