@@ -48,7 +48,7 @@ complementarity = []
 var_bound_violation = []
 esti_Optimal = []
 
-network_data = parse_file("./data/" * itema)
+network_data = parse_file("./data/" * m_file)
 load_keys = [i for i in keys(network_data["load"])]
 branch_keys = [i for i in keys(network_data["branch"])]
 gen_keys = [i for i in keys(network_data["gen"])]
@@ -131,16 +131,19 @@ for load_key in keys(network_data["load"])
 
 end
 
-perturbResult_dict = pmap(ω -> run_Ipopt_para_ac(m_file, network_data, load_distrn, load_keys, gen_keys, time_lim), 1:n)
+pd_perturb_list = []
+qd_perturb_list = []
+
+perturbResult_dict = pmap(ω -> run_Ipopt_para_ac(ω, m_file, network_data, load_distrn, load_keys, gen_keys, time_lim), 1:n)
 
 round = 0
-for profile in perturbResult_dict[itema]
+for profile in perturbResult_dict
 
     round = round + 1
 
     pd_dict_profile = Dict()
 
-    case_name_r = itema * "_" * string(round)
+    case_name_r = m_file * "_" * string(round)
     push!(case_name, case_name_r)
     push!(obj_val, profile[1])
     push!(Optimal, profile[2])
@@ -190,14 +193,18 @@ for profile in perturbResult_dict[itema]
         push!(vm_dict[vm_key], string(profile[8][bus_key]["vm"]))
     end
 
+    pd_dict_profile = Dict()
+    qd_dict_profile = Dict()
     for load_key in [i for i in keys(profile[7])]
         pd_key = "pd" * "_" * load_key
         qd_key = "qd" * "_" * load_key
         push!(pd_dict[pd_key], string(profile[7][load_key]["pd"]))
         push!(qd_dict[qd_key], string(profile[7][load_key]["qd"]))
-
-
+        pd_dict_profile[load_key] = profile[7][load_key]["pd"]
+        qd_dict_profile[load_key] = profile[7][load_key]["qd"]
     end
+    push!(pd_perturb_list, pd_dict_profile)
+    push!(qd_perturb_list, qd_dict_profile)
 
 end
 
@@ -255,11 +262,11 @@ for qt_key in keys(qt_dict)
 end
 
 for pd_key in keys(pd_dict)
-    result[!, pd_key] = pd_dict[pd_key]
+    result[!, pd_key] = string(pd_dict[pd_key])
 end
 
 for qd_key in keys(qd_dict)
-    result[!, qd_key] = qd_dict[qd_key]
+    result[!, qd_key] = string(qd_dict[qd_key])
 end
 
-CSV.write("./data/perturb/$(itema[1:end-2])_perturb_$(time_lim)_$(σ)_$(index).csv", result, bufsize = 2^31)
+CSV.write("./data/perturb/$(m_file[1:end-2])_perturb_$(time_lim)_$(σ)_$(index).csv", result, bufsize = 2^31)
