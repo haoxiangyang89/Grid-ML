@@ -1,4 +1,4 @@
-function run_Ipopt_para_ac(itema, network_data, load_distrn, load_keys, gen_keys, time_lim)
+function run_Ipopt_para_ac(itema, network_data, load_distrn, load_keys, gen_keys, time_lim, linear_solver = "mumps")
 
     network_data_new = deepcopy(network_data)
     #relax the inf term
@@ -66,9 +66,9 @@ function run_Ipopt_para_ac(itema, network_data, load_distrn, load_keys, gen_keys
     out_file_name = "./data/perturb_output/" * itema[1:end-2] * "perturb_output" * ".csv"
 
     # run the test with Ipopt
-    r_ipopt = run_ac_opf(network_data_new,
+    r_ipopt = solve_ac_opf(network_data_new,
         optimizer_with_attributes(Ipopt.Optimizer, "print_level" => 0, "max_wall_time" => time_lim, "file_print_level" => 3,
-            "output_file" => out_file_name))
+            "output_file" => out_file_name, "linear_solver" => linear_solver))
 
 
     obj_val = r_ipopt["objective"]
@@ -130,4 +130,3 @@ function run_Ipopt_para_ac(itema, network_data, load_distrn, load_keys, gen_keys
 
     return obj_val, Optimal, solve_time, primal_feasibility, dual_feasibility, time_limit, network_data_new["load"], r_ipopt["solution"]["bus"], r_ipopt["solution"]["gen"], r_ipopt["solution"]["branch"], esti_obj_val, dual_infeasibility, constraint_violation, overall_nlp, complementarity, var_bound_violation,esti_Optimal
 end
-
