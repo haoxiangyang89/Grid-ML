@@ -28,10 +28,10 @@ end
 
 # read in the hyper parameters for testing
 m_file = ARGS[1];
-σ = ARGS[2];
-n = ARGS[3];
-index = ARGS[4];
-time_lim = ARGS[5];
+σ = parse(Float64, ARGS[2]);
+n = parse(Int64, ARGS[3]);
+index = parse(Int64, ARGS[4]);
+time_lim = parse(Float64, ARGS[5]);
 
 case_name = AbstractString[]
 obj_val = Float64[]
