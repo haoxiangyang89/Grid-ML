@@ -136,10 +136,10 @@ qd_perturb_list = []
 
 perturbResult_dict = pmap(ω -> run_Ipopt_para_ac(ω, m_file, network_data, load_distrn, load_keys, gen_keys, time_lim), 1:n)
 
-iterNo = 0
+iterNo = 0;
 for profile in perturbResult_dict
 
-    global iterNo = iterNo + 1
+    global iterNo = iterNo + 1;
 
     pd_dict_profile = Dict()
 
@@ -271,7 +271,7 @@ end
 
 CSV.write("./data/perturb/$(m_file[1:end-2])_perturb_$(time_lim)_$(σ)_$(index).csv", result, bufsize = 2^31)
 
-perturbResult_dict_ntl = pmap(ω -> run_ac_noTimeLim(ω, itema, network_data, load_keys, gen_keys, pd_perturb_list[ω], qd_perturb_list[ω]), 1:n)
+perturbResult_dict_ntl = pmap(ω -> run_ac_noTimeLim(ω, m_file, network_data, load_keys, gen_keys, pd_perturb_list[ω], qd_perturb_list[ω]), 1:n)
 
 iterNo = 0;
 for profile in perturbResult_dict_ntl
