@@ -139,7 +139,7 @@ perturbResult_dict = pmap(ω -> run_Ipopt_para_ac(ω, m_file, network_data, load
 iterNo = 0
 for profile in perturbResult_dict
 
-    iterNo = iterNo + 1
+    global iterNo = iterNo + 1
 
     pd_dict_profile = Dict()
 
@@ -273,10 +273,10 @@ CSV.write("./data/perturb/$(m_file[1:end-2])_perturb_$(time_lim)_$(σ)_$(index).
 
 perturbResult_dict_ntl = pmap(ω -> run_ac_noTimeLim(ω, itema, network_data, load_keys, gen_keys, pd_perturb_list[ω], qd_perturb_list[ω]), 1:n)
 
-iterNo = 0
+iterNo = 0;
 for profile in perturbResult_dict_ntl
 
-    iterNo = iterNo + 1
+    global iterNo = iterNo + 1;
 
     pd_dict_profile = Dict()
 
