@@ -200,7 +200,7 @@ function run_ac_noTimeLim(ω, itema, network_data, load_keys, gen_keys, pd_pertu
 
     # run the test with Ipopt
     r_ipopt = solve_ac_opf(network_data_new,
-        optimizer_with_attributes(Ipopt.Optimizer, "print_level" => 0, "max_wall_time" => 3600, "file_print_level" => 3,
+        optimizer_with_attributes(Ipopt.Optimizer, "print_level" => 0, "max_wall_time" => 3600.0, "file_print_level" => 3,
             "output_file" => out_file_name, "linear_solver" => linear_solver))
 
 
@@ -209,7 +209,7 @@ function run_ac_noTimeLim(ω, itema, network_data, load_keys, gen_keys, pd_pertu
     solve_time = r_ipopt["solve_time"]
     primal_feasibility = r_ipopt["primal_status"]
     dual_feasibility = r_ipopt["dual_status"]
-    time_limit = 3600
+    time_limit = 3600.0
 
     # initialize variables
     esti_obj_val = 0
