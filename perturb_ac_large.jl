@@ -26,6 +26,17 @@ function exist_perturb_file(perturbed_file, itema)
     return false
 end
 
+function compile_ipopt()
+    mp = Model(Ipopt.Optimizer);
+    @variable(mp, x1 >= 0);
+    @variable(mp, x2 >= 0);
+    @constraint(mp, x1 + 2x2 <= 1);
+    @constraint(mp, 2x1 + x2 <= 1);
+    @objective(mp, Max, x1 + x2);
+    optimize!(mp);
+end
+pmap(ω -> compile_ipopt(), 1:nprocs())
+
 # read in the hyper parameters for testing
 m_file = ARGS[1];
 σ = parse(Float64, ARGS[2]);
