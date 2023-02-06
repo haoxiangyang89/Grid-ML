@@ -1,7 +1,7 @@
 # perturb ac for large test cases
 using Distributed;
 addprocs(30);
-@everywhere using PowerModels, Gurobi, Ipopt, Random, Distributions;
+@everywhere using JuMP, PowerModels, Gurobi, Ipopt, Random, Distributions;
 @everywhere using CSV;
 @everywhere include("solver_run_ac.jl");
 @everywhere const GUROBI_ENV = Gurobi.Env();
