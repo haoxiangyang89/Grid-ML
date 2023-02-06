@@ -26,7 +26,7 @@ function exist_perturb_file(perturbed_file, itema)
     return false
 end
 
-function compile_ipopt()
+@everywhere function compile_ipopt()
     mp = Model(Ipopt.Optimizer);
     @variable(mp, x1 >= 0);
     @variable(mp, x2 >= 0);
@@ -35,6 +35,7 @@ function compile_ipopt()
     @objective(mp, Max, x1 + x2);
     optimize!(mp);
 end
+
 pmap(ω -> compile_ipopt(), 1:nprocs())
 
 # read in the hyper parameters for testing
